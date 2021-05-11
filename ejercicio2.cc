@@ -59,6 +59,7 @@ int main(int argc, char **argv)
         }
         getnameinfo(&cliente, tam, host, NI_MAXHOST, serv, NI_MAXSERV, NI_NUMERICHOST | NI_NUMERICSERV);
         std::cout << bytes << " bytes de " << host << ":" << serv << std::endl;
+          std::cout << mensaje << std::endl;
 
         switch (mensaje[0])
         {
@@ -80,6 +81,7 @@ int main(int argc, char **argv)
 
         default:
             std::cout << "Comando no soportado " << mensaje[0]<< std::endl;
+            sendto(sock, "Comando no soportado\n",22, 0, &cliente, tam);
             break;
         }
     }
