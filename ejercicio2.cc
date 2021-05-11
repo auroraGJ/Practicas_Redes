@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     {
         struct sockaddr cliente;
         socklen_t tam = sizeof(struct sockaddr);
-        ssize_t bytes = recvfrom(sock, mensaje, 100 - 1, 0, &cliente, &tam);
+        ssize_t bytes = recvfrom(sock, (void*)mensaje, 100 - 1, 0, &cliente, &tam);
 
         if (bytes == -1)
         {

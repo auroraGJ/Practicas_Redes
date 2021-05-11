@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     }
 
     char mensaje[100];
-    int bytesEnviados = sendto(sock, argv[3], strlen(argv[3]+1), 0, result->ai_addr, result->ai_addrlen);
+    int bytesEnviados = sendto(sock, argv[3], strlen(argv[3])+1, 0, result->ai_addr, result->ai_addrlen);
     if(bytesEnviados == -1){
          std::cerr << "Error al enviar el mensaje" << std::endl;
         return -1;
