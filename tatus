@@ -1,0 +1,2129 @@
+[33mtag v1.2[m
+Tagger: Aurora <aurgar01@ucm.es>
+Date:   Sun May 30 20:52:56 2021 +0200
+
+Practica 2.2
+
+[33mcommit 432f6f4dd8c9fa09781dd672465d714097173f99[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;33mtag: v1.2[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Aurora <aurgar01@ucm.es>
+Date:   Sun May 30 20:31:09 2021 +0200
+
+    ejercicios de rerializacion
+
+[1mdiff --git a/ejercicio1 b/practica2.1/ejercicio1[m
+[1mold mode 100755[m
+[1mnew mode 100644[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio1[m
+[1mrename to practica2.1/ejercicio1[m
+[1mdiff --git a/ejercicio1.cc b/practica2.1/ejercicio1.cc[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio1.cc[m
+[1mrename to practica2.1/ejercicio1.cc[m
+[1mdiff --git a/ejercicio2 b/practica2.1/ejercicio2[m
+[1mold mode 100755[m
+[1mnew mode 100644[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio2[m
+[1mrename to practica2.1/ejercicio2[m
+[1mdiff --git a/ejercicio2.cc b/practica2.1/ejercicio2.cc[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio2.cc[m
+[1mrename to practica2.1/ejercicio2.cc[m
+[1mdiff --git a/ejercicio3 b/practica2.1/ejercicio3[m
+[1mold mode 100755[m
+[1mnew mode 100644[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio3[m
+[1mrename to practica2.1/ejercicio3[m
+[1mdiff --git a/ejercicio3.cc b/practica2.1/ejercicio3.cc[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio3.cc[m
+[1mrename to practica2.1/ejercicio3.cc[m
+[1mdiff --git a/ejercicio4 b/practica2.1/ejercicio4[m
+[1mold mode 100755[m
+[1mnew mode 100644[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio4[m
+[1mrename to practica2.1/ejercicio4[m
+[1mdiff --git a/ejercicio4.cc b/practica2.1/ejercicio4.cc[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio4.cc[m
+[1mrename to practica2.1/ejercicio4.cc[m
+[1mdiff --git a/ejercicio5 b/practica2.1/ejercicio5[m
+[1mold mode 100755[m
+[1mnew mode 100644[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio5[m
+[1mrename to practica2.1/ejercicio5[m
+[1mdiff --git a/ejercicio5.cc b/practica2.1/ejercicio5.cc[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio5.cc[m
+[1mrename to practica2.1/ejercicio5.cc[m
+[1mdiff --git a/ejercicio6.cc b/practica2.1/ejercicio6.cc[m
+[1msimilarity index 100%[m
+[1mrename from ejercicio6.cc[m
+[1mrename to practica2.1/ejercicio6.cc[m
+[1mdiff --git a/practica2.2/Ejercicios Serializacion/Serializable.h b/practica2.2/Ejercicios Serializacion/Serializable.h[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d4f6ea5[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/Ejercicios Serializacion/Serializable.h[m	
+[36m@@ -0,0 +1,90 @@[m
+[32m+[m[32m#ifndef SERIALIZABLE_H_[m
+[32m+[m[32m#define SERIALIZABLE_H_[m
+[32m+[m
+[32m+[m[32m#include <stdlib.h>[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m *  Este interfaz debe implementarlo aquellos objetos que se transmitan por red[m
+[32m+[m[32m *  Define una serialización sencilla para la transmisión:[m
+[32m+[m[32m *[m
+[32m+[m[32m *  +--------+[m
+[32m+[m[32m *  |        |  Esta es la representación binaria del objeto. Cada objeto[m
+[32m+[m[32m *  |        |  deberá implementar dos métodos:[m
+[32m+[m[32m *  |  data  |    - to_bin() para rellenar[m
+[32m+[m[32m *  |        |    - from_bin() para reconstruirse a partir de data.[m
+[32m+[m[32m *  |        |    - size es el tamaño total de la región data[m
+[32m+[m[32m *  +--------+[m
+[32m+[m[32m */[m
+[32m+[m[32mclass Serializable[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m
+[32m+[m[32m    Serializable():_size(0), _data(0){};[m
+[32m+[m
+[32m+[m[32m    virtual ~Serializable()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if ( _data != 0 )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            free(_data);[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Genera la representación binaria de la clase. Debe inicializar[m
+[32m+[m[32m     *  el buffer interno con la función helper alloc_data.[m
+[32m+[m[32m     */[m
+[32m+[m[32m    virtual void to_bin() = 0;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Esta función recibe un objeto serializado y lo reconstruye.[m
+[32m+[m[32m     *    @param data representación binaria del objeto[m
+[32m+[m[32m     *    @return 0 si éxito -1 en caso contrario[m
+[32m+[m[32m     */[m
+[32m+[m[32m    virtual int from_bin(char * data) = 0;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Devuelve un puntero al buffer interno con la representación del objeto.[m
+[32m+[m[32m     *  Debe inicializarse previamente via Serializable::to_bin()[m
+[32m+[m[32m     *    @return objeto serializado[m
+[32m+[m[32m     */[m
+[32m+[m[32m    char * data()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return _data;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  @return tamaño del objeto serializado[m
+[32m+[m[32m     */[m
+[32m+[m[32m    int32_t size()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return _size;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32mprotected:[m
+[32m+[m
+[32m+[m[32m    int32_t _size;[m
+[32m+[m
+[32m+[m[32m    char *  _data;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Reserva memoria para el buffer del objeto serializado[m
+[32m+[m[32m     */[m
+[32m+[m[32m    void alloc_data(int32_t data_size)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if ( _data != 0 )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            free(_data);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        _data = (char *) malloc(data_size);[m
+[32m+[m[32m        _size = data_size;[m
+[32m+[m[32m    }[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m#endif /* SERIALIZABLE_H_ */[m
+[1mdiff --git a/practica2.2/Ejercicios Serializacion/ejercicio1.cc b/practica2.2/Ejercicios Serializacion/ejercicio1.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..5162eb3[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/Ejercicios Serializacion/ejercicio1.cc[m	
+[36m@@ -0,0 +1,106 @@[m
+[32m+[m[32m#include "Serializable.h"[m
+[32m+[m
+[32m+[m[32m#include <iostream>[m
+[32m+[m[32m#include <string>[m
+[32m+[m
+[32m+[m[32m#include <sys/types.h>[m
+[32m+[m[32m#include <sys/stat.h>[m
+[32m+[m[32m#include <fcntl.h>[m
+[32m+[m[32m#include <string.h>[m
+[32m+[m[32m#include <unistd.h>[m
+[32m+[m
+[32m+[m
+[32m+[m[32mclass Jugador: public Serializable[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    Jugador(const char * _n, int16_t _x, int16_t _y):x(_x),y(_y)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        strncpy(name, _n, 80);[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    virtual ~Jugador(){};[m
+[32m+[m
+[32m+[m[32m    void to_bin()[m
+[32m+[m[32m    {[m
+[32m+[m[32m         //tamano de la clase jugador[m[41m [m
+[32m+[m[32m        _size = sizeof(char) * 80 + sizeof(int16_t) * 2 ;[m
+[32m+[m[32m        //Reservamos memoria[m
+[32m+[m[32m        alloc_data(_size);[m
+[32m+[m
+[32m+[m[32m        char *dir = _data;[m
+[32m+[m[41m       [m
+[32m+[m[32m        memcpy(dir, &x, sizeof(int16_t));[m
+[32m+[m[32m        dir += sizeof(int16_t);[m
+[32m+[m
+[32m+[m[32m        memcpy(dir, &y, sizeof(int16_t));[m
+[32m+[m[32m         dir += sizeof(int16_t);[m
+[32m+[m
+[32m+[m[32m        memcpy(dir, name, 80 * sizeof(char));[m
+[32m+[m[32m        //dir += 80 * sizeof(char);[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    int from_bin(char * data)[m
+[32m+[m[32m    {[m
+[32m+[m[41m  [m
+[32m+[m[32m        char *dir = data;[m
+[32m+[m[41m        [m
+[32m+[m
+[32m+[m[32m        memcpy(&x, dir, sizeof(int16_t));[m
+[32m+[m[32m        dir += sizeof(int16_t);[m
+[32m+[m[41m       [m
+[32m+[m[32m        memcpy(&y, dir, sizeof(int16_t));[m
+[32m+[m[32m        dir += sizeof(int16_t);[m
+[32m+[m
+[32m+[m[32m        memcpy(name, dir, 80 * sizeof(char));[m
+[32m+[m[32m       // dir += 80 * sizeof(char);[m
+[32m+[m[41m        [m
+[32m+[m[32m        return 0;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    int16_t getX() const{return x;}[m
+[32m+[m[32m    int16_t getY() const{return y;}[m
+[32m+[m
+[32m+[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    char name[80];[m
+[32m+[m
+[32m+[m[32m    int16_t x;[m
+[32m+[m[32m    int16_t y;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mint main(int argc, char **argv)[m
+[32m+[m[32m{[m
+[32m+[m[32m    Jugador one_r("", 0, 0);[m
+[32m+[m[32m    Jugador one_w("Player_ONE", 123, 987);[m
+[32m+[m
+[32m+[m[32m    // 1. Serializar el objeto one_w[m
+[32m+[m[32m     one_w.to_bin();[m
+[32m+[m
+[32m+[m[32m    // 2. Escribir la serialización en un fichero[m
+[32m+[m
+[32m+[m[32m     int fichero = open("./player1_data.txt", O_CREAT | O_TRUNC |O_RDWR, 0666);[m
+[32m+[m[32m    ssize_t tamano = write(fichero,one_w.data(), one_w.size());[m
+[32m+[m[32m    if(tamano != one_w.size()) std::cout << "La informacion no se guardo de forma correcta"<< endl;[m
+[32m+[m[32m    close(fichero);[m
+[32m+[m
+[32m+[m[32m    // 3. Leer el fichero[m
+[32m+[m[32m     fichero = open("./player1_data.txt", O_RDONLY, 0666);[m
+[32m+[m[32m    char buffer[tamano];[m
+[32m+[m[41m    [m
+[32m+[m[32m    if(read(fichero,&buffer,tamano)==-1){[m
+[32m+[m[32m        std::cerr << "Fallo al leer el archivo: ./player1_data.txt\n";[m
+[32m+[m[32m        return -(EXIT_FAILURE);[m
+[32m+[m[32m    }[m[41m [m
+[32m+[m[32m    close(fichero);[m
+[32m+[m
+[32m+[m[32m    // 4. "Deserializar" en one_r[m
+[32m+[m[32m     one_r.from_bin(buffer);[m
+[32m+[m
+[32m+[m[32m    // 5. Mostrar el contenido de one_r[m
+[32m+[m[32m    std::cout << "Nombre de one_r: " << one_r.name << ", x: " << one_r.getX() << ", y: " << one_r.getY() << "\n";[m
+[32m+[m
+[32m+[m[32m    return 0;[m
+[32m+[m[32m}[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Chat.cc b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Chat.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4eb780a[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Chat.cc[m
+[36m@@ -0,0 +1,81 @@[m
+[32m+[m[32m#include "Chat.h"[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mvoid ChatMessage::to_bin()[m
+[32m+[m[32m{[m
+[32m+[m[32m    alloc_data(MESSAGE_SIZE);[m
+[32m+[m
+[32m+[m[32m    memset(_data, 0, MESSAGE_SIZE);[m
+[32m+[m
+[32m+[m[32m    //Serializar los campos type, nick y message en el buffer _data[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mint ChatMessage::from_bin(char * bobj)[m
+[32m+[m[32m{[m
+[32m+[m[32m    alloc_data(MESSAGE_SIZE);[m
+[32m+[m
+[32m+[m[32m    memcpy(static_cast<void *>(_data), bobj, MESSAGE_SIZE);[m
+[32m+[m
+[32m+[m[32m    //Reconstruir la clase usando el buffer _data[m
+[32m+[m
+[32m+[m[32m    return 0;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mvoid ChatServer::do_messages()[m
+[32m+[m[32m{[m
+[32m+[m[32m    while (true)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        /*[m
+[32m+[m[32m         * NOTA: los clientes están definidos con "smart pointers", es necesario[m
+[32m+[m[32m         * crear un unique_ptr con el objeto socket recibido y usar std::move[m
+[32m+[m[32m         * para añadirlo al vector[m
+[32m+[m[32m         */[m
+[32m+[m
+[32m+[m[32m        //Recibir Mensajes en y en función del tipo de mensaje[m
+[32m+[m[32m        // - LOGIN: Añadir al vector clients[m
+[32m+[m[32m        // - LOGOUT: Eliminar del vector clients[m
+[32m+[m[32m        // - MESSAGE: Reenviar el mensaje a todos los clientes (menos el emisor)[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mvoid ChatClient::login()[m
+[32m+[m[32m{[m
+[32m+[m[32m    std::string msg;[m
+[32m+[m
+[32m+[m[32m    ChatMessage em(nick, msg);[m
+[32m+[m[32m    em.type = ChatMessage::LOGIN;[m
+[32m+[m
+[32m+[m[32m    socket.send(em, socket);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mvoid ChatClient::logout()[m
+[32m+[m[32m{[m
+[32m+[m[32m    // Completar[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mvoid ChatClient::input_thread()[m
+[32m+[m[32m{[m
+[32m+[m[32m    while (true)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        // Leer stdin con std::getline[m
+[32m+[m[32m        // Enviar al servidor usando socket[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mvoid ChatClient::net_thread()[m
+[32m+[m[32m{[m
+[32m+[m[32m    while(true)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        //Recibir Mensajes de red[m
+[32m+[m[32m        //Mostrar en pantalla el mensaje de la forma "nick: mensaje"[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Chat.h b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Chat.h[m
+[1mnew file mode 100644[m
+[1mindex 0000000..2e8d05e[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Chat.h[m
+[36m@@ -0,0 +1,137 @@[m
+[32m+[m[32m#include <string>[m
+[32m+[m[32m#include <unistd.h>[m
+[32m+[m[32m#include <string.h>[m
+[32m+[m[32m#include <vector>[m
+[32m+[m[32m#include <memory>[m
+[32m+[m
+[32m+[m[32m#include "Serializable.h"[m
+[32m+[m[32m#include "Socket.h"[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m *  Mensaje del protocolo de la aplicación de Chat[m
+[32m+[m[32m *[m
+[32m+[m[32m *  +-------------------+[m
+[32m+[m[32m *  | Tipo: uint8_t     | 0 (login), 1 (mensaje), 2 (logout)[m
+[32m+[m[32m *  +-------------------+[m
+[32m+[m[32m *  | Nick: char[8]     | Nick incluido el char terminación de cadena '\0'[m
+[32m+[m[32m *  +-------------------+[m
+[32m+[m[32m *  |                   |[m
+[32m+[m[32m *  | Mensaje: char[80] | Mensaje incluido el char terminación de cadena '\0'[m
+[32m+[m[32m *  |                   |[m
+[32m+[m[32m *  +-------------------+[m
+[32m+[m[32m *[m
+[32m+[m[32m */[m
+[32m+[m[32mclass ChatMessage: public Serializable[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    static const size_t MESSAGE_SIZE = sizeof(char) * 88 + sizeof(uint8_t);[m
+[32m+[m
+[32m+[m[32m    enum MessageType[m
+[32m+[m[32m    {[m
+[32m+[m[32m        LOGIN   = 0,[m
+[32m+[m[32m        MESSAGE = 1,[m
+[32m+[m[32m        LOGOUT  = 2[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    ChatMessage(){};[m
+[32m+[m
+[32m+[m[32m    ChatMessage(const std::string& n, const std::string& m):nick(n),message(m){};[m
+[32m+[m
+[32m+[m[32m    void to_bin();[m
+[32m+[m
+[32m+[m[32m    int from_bin(char * bobj);[m
+[32m+[m
+[32m+[m[32m    uint8_t type;[m
+[32m+[m
+[32m+[m[32m    std::string nick;[m
+[32m+[m[32m    std::string message;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m *  Clase para el servidor de chat[m
+[32m+[m[32m */[m
+[32m+[m[32mclass ChatServer[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    ChatServer(const char * s, const char * p): socket(s, p)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        socket.bind();[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Thread principal del servidor recive mensajes en el socket y[m
+[32m+[m[32m     *  lo distribuye a los clientes. Mantiene actualizada la lista de clientes[m
+[32m+[m[32m     */[m
+[32m+[m[32m    void do_messages();[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Lista de clientes conectados al servidor de Chat, representados por[m
+[32m+[m[32m     *  su socket[m
+[32m+[m[32m     */[m
+[32m+[m[32m    std::vector<std::unique_ptr<Socket>> clients;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * Socket del servidor[m
+[32m+[m[32m     */[m
+[32m+[m[32m    Socket socket;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m *  Clase para el cliente de chat[m
+[32m+[m[32m */[m
+[32m+[m[32mclass ChatClient[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * @param s dirección del servidor[m
+[32m+[m[32m     * @param p puerto del servidor[m
+[32m+[m[32m     * @param n nick del usuario[m
+[32m+[m[32m     */[m
+[32m+[m[32m    ChatClient(const char * s, const char * p, const char * n):socket(s, p),[m
+[32m+[m[32m        nick(n){};[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Envía el mensaje de login al servidor[m
+[32m+[m[32m     */[m
+[32m+[m[32m    void login();[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Envía el mensaje de logout al servidor[m
+[32m+[m[32m     */[m
+[32m+[m[32m    void logout();[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Rutina principal para el Thread de E/S. Lee datos de STDIN (std::getline)[m
+[32m+[m[32m     *  y los envía por red vía el Socket.[m
+[32m+[m[32m     */[m
+[32m+[m[32m    void input_thread();[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Rutina del thread de Red. Recibe datos de la red y los "renderiza"[m
+[32m+[m[32m     *  en STDOUT[m
+[32m+[m[32m     */[m
+[32m+[m[32m    void net_thread();[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * Socket para comunicar con el servidor[m
+[32m+[m[32m     */[m
+[32m+[m[32m    Socket socket;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * Nick del usuario[m
+[32m+[m[32m     */[m
+[32m+[m[32m    std::string nick;[m
+[32m+[m[32m};[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/ChatClient.cc b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/ChatClient.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..286bf07[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/ChatClient.cc[m
+[36m@@ -0,0 +1,14 @@[m
+[32m+[m[32m#include <thread>[m
+[32m+[m[32m#include "Chat.h"[m
+[32m+[m
+[32m+[m[32mint main(int argc, char **argv)[m
+[32m+[m[32m{[m
+[32m+[m[32m    ChatClient ec(argv[1], argv[2], argv[3]);[m
+[32m+[m
+[32m+[m[32m    std::thread net_thread([&ec](){ ec.net_thread(); });[m
+[32m+[m
+[32m+[m[32m    ec.login();[m
+[32m+[m
+[32m+[m[32m    ec.input_thread();[m
+[32m+[m[32m}[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/ChatServer.cc b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/ChatServer.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..caa1969[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/ChatServer.cc[m
+[36m@@ -0,0 +1,10 @@[m
+[32m+[m[32m#include "Chat.h"[m
+[32m+[m
+[32m+[m[32mint main(int argc, char **argv)[m
+[32m+[m[32m{[m
+[32m+[m[32m    ChatServer es(argv[1], argv[2]);[m
+[32m+[m
+[32m+[m[32m    es.do_messages();[m
+[32m+[m
+[32m+[m[32m    return 0;[m
+[32m+[m[32m}[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Makefile b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Makefile[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0e5ba0f[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Makefile[m
+[36m@@ -0,0 +1,23 @@[m
+[32m+[m[32mCC=g++[m
+[32m+[m[32mCFLAGS=-g -I.[m
+[32m+[m[32mDEPS = Socket.h Chat.h[m
+[32m+[m[32mOBJ = Socket.o Chat.o[m
+[32m+[m[32mLIBS=-lpthread[m
+[32m+[m
+[32m+[m[32m%.o: %.cc $(DEPS)[m
+[32m+[m	[32m$(CC) -g -c -o $@ $< $(CFLAGS)[m
+[32m+[m
+[32m+[m[32mall: cs cc[m
+[32m+[m
+[32m+[m[32mcs: $(OBJ) ChatServer.o[m
+[32m+[m	[32mg++ -o $@ $^ $(CFLAGS) $(LIBS)[m
+[32m+[m
+[32m+[m[32mcc: $(OBJ) ChatClient.o[m
+[32m+[m	[32mg++ -o $@ $^ $(CFLAGS) $(LIBS)[m
+[32m+[m
+[32m+[m
+[32m+[m[32m.PHONY: clean[m
+[32m+[m
+[32m+[m[32mclean:[m
+[32m+[m	[32mrm -f *.o cs cc[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Serializable.h b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Serializable.h[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d4f6ea5[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Serializable.h[m
+[36m@@ -0,0 +1,90 @@[m
+[32m+[m[32m#ifndef SERIALIZABLE_H_[m
+[32m+[m[32m#define SERIALIZABLE_H_[m
+[32m+[m
+[32m+[m[32m#include <stdlib.h>[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m *  Este interfaz debe implementarlo aquellos objetos que se transmitan por red[m
+[32m+[m[32m *  Define una serialización sencilla para la transmisión:[m
+[32m+[m[32m *[m
+[32m+[m[32m *  +--------+[m
+[32m+[m[32m *  |        |  Esta es la representación binaria del objeto. Cada objeto[m
+[32m+[m[32m *  |        |  deberá implementar dos métodos:[m
+[32m+[m[32m *  |  data  |    - to_bin() para rellenar[m
+[32m+[m[32m *  |        |    - from_bin() para reconstruirse a partir de data.[m
+[32m+[m[32m *  |        |    - size es el tamaño total de la región data[m
+[32m+[m[32m *  +--------+[m
+[32m+[m[32m */[m
+[32m+[m[32mclass Serializable[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m
+[32m+[m[32m    Serializable():_size(0), _data(0){};[m
+[32m+[m
+[32m+[m[32m    virtual ~Serializable()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if ( _data != 0 )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            free(_data);[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Genera la representación binaria de la clase. Debe inicializar[m
+[32m+[m[32m     *  el buffer interno con la función helper alloc_data.[m
+[32m+[m[32m     */[m
+[32m+[m[32m    virtual void to_bin() = 0;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Esta función recibe un objeto serializado y lo reconstruye.[m
+[32m+[m[32m     *    @param data representación binaria del objeto[m
+[32m+[m[32m     *    @return 0 si éxito -1 en caso contrario[m
+[32m+[m[32m     */[m
+[32m+[m[32m    virtual int from_bin(char * data) = 0;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Devuelve un puntero al buffer interno con la representación del objeto.[m
+[32m+[m[32m     *  Debe inicializarse previamente via Serializable::to_bin()[m
+[32m+[m[32m     *    @return objeto serializado[m
+[32m+[m[32m     */[m
+[32m+[m[32m    char * data()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return _data;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  @return tamaño del objeto serializado[m
+[32m+[m[32m     */[m
+[32m+[m[32m    int32_t size()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return _size;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32mprotected:[m
+[32m+[m
+[32m+[m[32m    int32_t _size;[m
+[32m+[m
+[32m+[m[32m    char *  _data;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Reserva memoria para el buffer del objeto serializado[m
+[32m+[m[32m     */[m
+[32m+[m[32m    void alloc_data(int32_t data_size)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if ( _data != 0 )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            free(_data);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        _data = (char *) malloc(data_size);[m
+[32m+[m[32m        _size = data_size;[m
+[32m+[m[32m    }[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m#endif /* SERIALIZABLE_H_ */[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Socket.cc b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Socket.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..9c1a5a9[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Socket.cc[m
+[36m@@ -0,0 +1,61 @@[m
+[32m+[m[32m#include <string.h>[m
+[32m+[m
+[32m+[m[32m#include "Serializable.h"[m
+[32m+[m[32m#include "Socket.h"[m
+[32m+[m
+[32m+[m[32mSocket::Socket(const char * address, const char * port):sd(-1)[m
+[32m+[m[32m{[m
+[32m+[m[32m    //Construir un socket de tipo AF_INET y SOCK_DGRAM usando getaddrinfo.[m
+[32m+[m[32m    //Con el resultado inicializar los miembros sd, sa y sa_len de la clase[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mint Socket::recv(Serializable &obj, Socket * &sock)[m
+[32m+[m[32m{[m
+[32m+[m[32m    struct sockaddr sa;[m
+[32m+[m[32m    socklen_t sa_len = sizeof(struct sockaddr);[m
+[32m+[m
+[32m+[m[32m    char buffer[MAX_MESSAGE_SIZE];[m
+[32m+[m
+[32m+[m[32m    ssize_t bytes = ::recvfrom(sd, buffer, MAX_MESSAGE_SIZE, 0, &sa, &sa_len);[m
+[32m+[m
+[32m+[m[32m    if ( bytes <= 0 )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return -1;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    if ( sock != 0 )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        sock = new Socket(&sa, sa_len);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    obj.from_bin(buffer);[m
+[32m+[m
+[32m+[m[32m    return 0;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mint Socket::send(Serializable& obj, const Socket& sock)[m
+[32m+[m[32m{[m
+[32m+[m[32m    //Serializar el objeto[m
+[32m+[m[32m    //Enviar el objeto binario a sock usando el socket sd[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mbool operator== (const Socket &s1, const Socket &s2)[m
+[32m+[m[32m{[m
+[32m+[m[32m    //Comparar los campos sin_family, sin_addr.s_addr y sin_port[m
+[32m+[m[32m    //de la estructura sockaddr_in de los Sockets s1 y s2[m
+[32m+[m[32m    //Retornar false si alguno difiere[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mstd::ostream& operator<<(std::ostream& os, const Socket& s)[m
+[32m+[m[32m{[m
+[32m+[m[32m    char host[NI_MAXHOST];[m
+[32m+[m[32m    char serv[NI_MAXSERV];[m
+[32m+[m
+[32m+[m[32m    getnameinfo((struct sockaddr *) &(s.sa), s.sa_len, host, NI_MAXHOST, serv,[m
+[32m+[m[32m                NI_MAXSERV, NI_NUMERICHOST);[m
+[32m+[m
+[32m+[m[32m    os << host << ":" << serv;[m
+[32m+[m
+[32m+[m[32m    return os;[m
+[32m+[m[32m};[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Socket.h b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Socket.h[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ef6a009[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/practica2.2/replicacion-chat/Socket.h[m
+[36m@@ -0,0 +1,129 @@[m
+[32m+[m[32m#ifndef SOCKET_H_[m
+[32m+[m[32m#define SOCKET_H_[m
+[32m+[m
+[32m+[m[32m#include <sys/socket.h>[m
+[32m+[m[32m#include <sys/types.h>[m
+[32m+[m[32m#include <netdb.h>[m
+[32m+[m
+[32m+[m[32m#include <iostream>[m
+[32m+[m[32m#include <stdexcept>[m
+[32m+[m
+[32m+[m[32m#include <ostream>[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// Definiciones adelantadas[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32mclass Socket;[m
+[32m+[m[32mclass Serializable;[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m *  Esta función compara dos Socks, realizando la comparación de las structuras[m
+[32m+[m[32m *  sockaddr: familia (INET), dirección y puerto, ver ip(7) para comparar[m
+[32m+[m[32m *  estructuras sockaddr_in. Deben comparar el tipo (sin_family), dirección[m
+[32m+[m[32m *  (sin_addr.s_addr) y puerto (sin_port). La comparación de los campos puede[m
+[32m+[m[32m *  realizarse con el operador == de los tipos básicos asociados.[m
+[32m+[m[32m */[m
+[32m+[m[32mbool operator== (const Socket &s1, const Socket &s2);[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m *  Imprime la dirección y puerto en número con el formato:"dirección_ip:puerto"[m
+[32m+[m[32m */[m
+[32m+[m[32mstd::ostream& operator<<(std::ostream& os, const Socket& dt);[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Clase base que representa el extremo local de una conexión UDP. Tiene la lógica[m
+[32m+[m[32m * para inicializar un sockect y la descripción binaria del extremo[m
+[32m+[m[32m *   - dirección IP[m
+[32m+[m[32m *   - puerto[m
+[32m+[m[32m */[m
+[32m+[m[32mclass Socket[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * El máximo teórico de un mensaje UDP es 2^16, del que hay que[m
+[32m+[m[32m     * descontar la cabecera UDP e IP (con las posibles opciones). Se debe[m
+[32m+[m[32m     * utilizar esta constante para definir buffers de recepción.[m
+[32m+[m[32m     */[m
+[32m+[m[32m    static const int32_t MAX_MESSAGE_SIZE = 32768;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Construye el socket UDP con la dirección y puerto dados. Esta función[m
+[32m+[m[32m     *  usara getaddrinfo para obtener la representación binaria de dirección y[m
+[32m+[m[32m     *  puerto.[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *  Además abrirá el canal de comunicación con la llamada socket(2).[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *    @param address cadena que representa la dirección o nombre[m
+[32m+[m[32m     *    @param port cadena que representa el puerto o nombre del servicio[m
+[32m+[m[32m     */[m
+[32m+[m[32m    Socket(const char * address, const char * port);[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Inicializa un Socket copiando los parámetros del socket[m
+[32m+[m[32m     */[m
+[32m+[m[32m    Socket(struct sockaddr * _sa, socklen_t _sa_len):sd(-1), sa(*_sa),[m
+[32m+[m[32m        sa_len(_sa_len){};[m
+[32m+[m
+[32m+[m[32m    virtual ~Socket(){};[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Recibe un mensaje de aplicación[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *    @param obj que recibirá los datos de la red. Se usará para la[m
+[32m+[m[32m     *    reconstrucción del objeto mediante Serializable::from_bin del interfaz.[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *    @param sock que identificará al extremo que envía los datos si es[m
+[32m+[m[32m     *    distinto de 0 se creará un objeto Socket con la dirección y puerto.[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *    @return 0 en caso de éxito o -1 si error (cerrar conexión)[m
+[32m+[m[32m     */[m
+[32m+[m[32m    int recv(Serializable &obj, Socket * &sock);[m
+[32m+[m
+[32m+[m[32m    int recv(Serializable &obj) //Descarta los datos del otro extremo[m
+[32m+[m[32m    {[m
+[32m+[m[32m        Socket * s = 0;[m
+[32m+[m
+[32m+[m[32m        return recv(obj, s);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Envía un mensaje de aplicación definido por un objeto Serializable.[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *    @param obj en el que se enviará por la red. La función lo serializará[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *    @param sock con la dirección y puerto destino[m
+[32m+[m[32m     *[m
+[32m+[m[32m     *    @return 0 en caso de éxito o -1 si error[m
+[32m+[m[32m     */[m
+[32m+[m[32m    int send(Serializable& obj, const Socket& sock);[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Enlaza el descriptor del socket a la dirección y puerto[m
+[32m+[m[32m     */[m
+[32m+[m[32m    int bind()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return ::bind(sd, (const struct sockaddr *) &sa, sa_len);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    friend std::ostream& operator<<(std::ostream& os, const Socket& dt);[m
+[32m+[m
+[32m+[m[32m    friend bool operator== (const Socket &s1, const Socket &s2);[m
+[32m+[m
+[32m+[m[32mprotected:[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Descriptor del socket[m
+[32m+[m[32m     */[m
+[32m+[m[32m    int sd;[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     *  Representación binaria del extremo, usada por servidor y cliente[m
+[32m+[m[32m     */[m
+[32m+[m[32m    struct sockaddr sa;[m
+[32m+[m[32m    socklen_t       sa_len;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m#endif /* SOCKET_H_ */[m
+[1mdiff --git a/practica2.2/rvr-release1.0/prediction/Makefile b/practica2.2/rvr-release1.0/prediction/Makefile[m
+[1mnew file mode 100644[m
+[1mindex 0000000..32c9915[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/prediction/Makefile[m
+[36m@@ -0,0 +1,19 @@[m
+[32m+[m[32mCC=g++[m
+[32m+[m[32mCFLAGS=-g -I. -std=c++11[m
+[32m+[m[32mDEPS = XLDisplay.h[m
+[32m+[m[32mOBJ = prediction.o XLDisplay.o[m
+[32m+[m[32mLIBS=-lpthread -lm -lX11 -std=c++11[m
+[32m+[m
+[32m+[m[32m%.o: %.cc $(DEPS)[m
+[32m+[m	[32m$(CC) -g -c -o $@ $< $(CFLAGS)[m
+[32m+[m
+[32m+[m[32mall: prediction[m
+[32m+[m
+[32m+[m[32mprediction: $(OBJ) prediction.o[m
+[32m+[m	[32mg++ -o $@ $^ $(CFLAGS) $(LIBS)[m
+[32m+[m
+[32m+[m[32m.PHONY: clean[m
+[32m+[m
+[32m+[m[32mclean:[m
+[32m+[m	[32mrm -f *.o prediction[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/prediction/XLDisplay.cc b/practica2.2/rvr-release1.0/prediction/XLDisplay.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d2a876f[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/prediction/XLDisplay.cc[m
+[36m@@ -0,0 +1,135 @@[m
+[32m+[m[32m#include "XLDisplay.h"[m
+[32m+[m[32m#include <stdexcept>[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//[m
+[32m+[m[32mstd::unique_ptr<XLDisplay> XLDisplay::_display = nullptr;[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mDisplay* XLDisplay::xl_dpy;[m
+[32m+[m[32mWindow   XLDisplay::xl_wdw;[m
+[32m+[m
+[32m+[m[32mGC XLDisplay::xl_gc;[m
+[32m+[m
+[32m+[m[32mColormap XLDisplay::xl_cm;[m
+[32m+[m[32mstd::vector<int> XLDisplay::xl_colors;[m
+[32m+[m
+[32m+[m[32mXFontStruct* XLDisplay::xl_font;[m
+[32m+[m
+[32m+[m[32mconst char * XLDisplay::font =  "*-helvetica-*-r-*-*-12-*";[m
+[32m+[m[32m//const char * XLDisplay::font = "*-liberation sans-*-r-*-*-*-*";[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mvoid XLDisplay::init(int32_t w, int32_t h, const std::string& t)[m
+[32m+[m[32m{[m
+[32m+[m[32m    if (_display != nullptr)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    XInitThreads();[m
+[32m+[m
+[32m+[m[32m    xl_dpy = XOpenDisplay(0);[m
+[32m+[m
+[32m+[m[32m    if(xl_dpy == nullptr)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        throw std::runtime_error("XOpenDisplay: cannot open display.\n");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    int black = BlackPixel(xl_dpy, DefaultScreen(xl_dpy));[m
+[32m+[m[32m    int white = WhitePixel(xl_dpy, DefaultScreen(xl_dpy));[m
+[32m+[m
+[32m+[m[32m    // (0,0) coordenadas del origen, esquina superior izquierda de la ventana[m
+[32m+[m[32m    // 3 borde de la ventana[m
+[32m+[m[32m    // white, negro (black) borde y blanco (white) fondo de la ventana[m
+[32m+[m[32m    xl_wdw = XCreateSimpleWindow(xl_dpy, DefaultRootWindow(xl_dpy),[m
+[32m+[m[32m            0, 0, w, h, 3, black, white);[m
+[32m+[m
+[32m+[m[32m    XSetWindowAttributes attr;[m
+[32m+[m[32m    attr.backing_store = Always;[m
+[32m+[m
+[32m+[m[32m    XChangeWindowAttributes(xl_dpy, xl_wdw, CWBackingStore, &attr);[m
+[32m+[m
+[32m+[m[32m    XStoreName(xl_dpy, xl_wdw, t.c_str());[m
+[32m+[m
+[32m+[m[32m    XSelectInput(xl_dpy, xl_wdw, StructureNotifyMask | KeyPressMask);[m
+[32m+[m
+[32m+[m[32m    // "Mapea" la ventana en la pantalla y crea el "contexto gráfico" asociado[m
+[32m+[m[32m    XMapWindow(xl_dpy, xl_wdw);[m
+[32m+[m
+[32m+[m[32m    xl_gc = XCreateGC(xl_dpy, xl_wdw, 0, 0);[m
+[32m+[m
+[32m+[m[32m    XSetForeground(xl_dpy, xl_gc, black);[m
+[32m+[m
+[32m+[m[32m    //Inicializa el mapa de colores[m
+[32m+[m[32m    xl_cm =  DefaultColormap(xl_dpy, DefaultScreen(xl_dpy));[m
+[32m+[m
+[32m+[m[32m    std::vector<std::string> named = {"red", "brown", "blue", "yellow", "green"};[m
+[32m+[m
+[32m+[m[32m    for (auto nc : named)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XColor tmpc;[m
+[32m+[m
+[32m+[m[32m        int rc = XAllocNamedColor(xl_dpy, xl_cm, nc.c_str(), &tmpc, &tmpc);[m
+[32m+[m
+[32m+[m[32m        if (rc == 0)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            throw std::runtime_error("XAllocNamedColor: cannot allocate" + nc + "\n");[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        xl_colors.push_back(tmpc.pixel);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    xl_colors.push_back(white);[m
+[32m+[m
+[32m+[m[32m    xl_colors.push_back(black);[m
+[32m+[m
+[32m+[m[32m    // Carga la fuente por defecto[m
+[32m+[m[32m    xl_font = XLoadQueryFont(xl_dpy, const_cast<char *>(font));[m
+[32m+[m
+[32m+[m[32m    if ( xl_font == nullptr )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        throw std::runtime_error("XLoadQueryFont: cannot load font.\n");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    XSetFont(xl_dpy, xl_gc, xl_font->fid);[m
+[32m+[m
+[32m+[m[32m    // Espera al evento MapNotify[m
+[32m+[m[32m    while (true)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XEvent e;[m
+[32m+[m
+[32m+[m[32m        XNextEvent(xl_dpy, &e);[m
+[32m+[m
+[32m+[m[32m        if (e.type == MapNotify)[m
+[32m+[m[32m            break;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //Inicializa el puntero singleton[m
+[32m+[m[32m    _display = std::unique_ptr<XLDisplay>(new XLDisplay);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mchar XLDisplay::wait_key()[m
+[32m+[m[32m{[m
+[32m+[m[32m    XEvent event;[m
+[32m+[m
+[32m+[m[32m    while(true)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XNextEvent(xl_dpy, &event);[m
+[32m+[m
+[32m+[m[32m        if ( event.type != KeyPress )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            continue;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        return XLookupKeysym(&event.xkey,0);[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/prediction/XLDisplay.h b/practica2.2/rvr-release1.0/prediction/XLDisplay.h[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8f82858[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/prediction/XLDisplay.h[m
+[36m@@ -0,0 +1,159 @@[m
+[32m+[m[32m#include <X11/Xlib.h>[m
+[32m+[m[32m#include <stdlib.h>[m
+[32m+[m[32m#include <string>[m
+[32m+[m[32m#include <stdexcept>[m
+[32m+[m[32m#include <memory>[m
+[32m+[m[32m#include <vector>[m
+[32m+[m
+[32m+[m[32m#ifndef _XL_DISPLAY[m
+[32m+[m[32m#define _XL_DISPLAY[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// Esta clase ofrece un interfaz sencillo para interacciones sencillas con el[m
+[32m+[m[32m// servidor gráfico del sistema X.[m
+[32m+[m[32m//[m
+[32m+[m[32m// Referencia: https://tronche.com/gui/x/xlib/[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32mclass XLDisplay[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    enum XLColor[m
+[32m+[m[32m    {[m
+[32m+[m[32m        RED    = 0,[m
+[32m+[m[32m        BROWN  = 1,[m
+[32m+[m[32m        BLUE   = 2,[m
+[32m+[m[32m        YELLOW = 3,[m
+[32m+[m[32m        GREEN  = 4,[m
+[32m+[m[32m        WHITE  = 5,[m
+[32m+[m[32m        BLACK  = 6[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Constructores. Implementa el patrón singleton[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // El programa principal debe llamar a la función init, ej.[m
+[32m+[m[32m    //[m
+[32m+[m[32m    //  XLDisplay::init(200, 300, "Título Ventana);[m
+[32m+[m[32m    //  ...[m
+[32m+[m[32m    //  XLDisplay& dpy = XLDisplay::display();[m
+[32m+[m[32m    //  ...[m
+[32m+[m[32m    //  dpy.circle(14, 14, 5);[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    XLDisplay(const XLDisplay&) = delete;[m
+[32m+[m
+[32m+[m[32m    XLDisplay(const XLDisplay&&) = delete;[m
+[32m+[m
+[32m+[m[32m    XLDisplay& operator=(const XLDisplay&) = delete;[m
+[32m+[m
+[32m+[m[32m    static void init(int32_t w, int32_t h, const std::string& t);[m
+[32m+[m
+[32m+[m[32m    ~XLDisplay()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XFreeColormap(xl_dpy, xl_cm);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    static XLDisplay& display()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return *_display.get();[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Funciones de render[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    void set_color(XLColor c)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XSetForeground(xl_dpy, xl_gc, xl_colors[c]);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja un punto en (x,y)[m
+[32m+[m[32m    void point( int32_t x, int32_t y )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawPoint(xl_dpy, xl_wdw, xl_gc, x, y);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja una línea desde (x1,y1) a (x2,y2)[m
+[32m+[m[32m    void line( int32_t x1, int32_t y1, int32_t x2, int32_t y2 )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawLine(xl_dpy, xl_wdw, xl_gc,x1,y1,x2,y2);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja una serie de líneas cuyos vértices están dados en un array de[m
+[32m+[m[32m    // estructuras XPoint.[m
+[32m+[m[32m    //[m
+[32m+[m[32m    // XPoint pts [] = {{0,0},{15,15},{0,15},{0,0}}[m
+[32m+[m[32m    // int npoints = 4;[m
+[32m+[m[32m    void lines(XPoint * points, int npoints)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawLines(xl_dpy, xl_wdw, xl_gc, points, npoints, CoordModeOrigin);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja un círculo con centro en (x,y) y radio r[m
+[32m+[m[32m    void circle(int32_t x, int32_t y, int32_t r)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawArc(xl_dpy, xl_wdw, xl_gc, x-r, y - r, 2 * r, 2 * r, 0, 360*64);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja un rectángulo con vértice superior-izquierdo en (x,y), ancho w[m
+[32m+[m[32m    // y alto h[m
+[32m+[m[32m    void rectangle(int32_t x, int32_t y, int32_t w, int32_t h, bool filled)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if (filled)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            XFillRectangle(xl_dpy, xl_wdw, xl_gc, x, y, w, h);[m
+[32m+[m[32m        }[m
+[32m+[m[32m        else[m
+[32m+[m[32m        {[m
+[32m+[m[32m            XDrawRectangle(xl_dpy, xl_wdw, xl_gc, x, y, w, h);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Escribe un texto en la posición (x,y)[m
+[32m+[m[32m    void text(int32_t x, int32_t y, const std::string& txt)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawString(xl_dpy, xl_wdw, xl_gc, x, y, txt.c_str(), txt.length());[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Vacía el buffer enviando los comandos al servidor y dibuja la ventana[m
+[32m+[m[32m    void flush()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XFlush(xl_dpy);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Borra la ventana[m
+[32m+[m[32m    void clear()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XClearWindow(xl_dpy, xl_wdw);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Eventos de entrada (teclado)[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m    //Espera por la pulsación de una tecla, que devuelve la función[m
+[32m+[m[32m    char wait_key();[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m[32m    XLDisplay() = default;[m
+[32m+[m
+[32m+[m[32m    static const char * font;[m
+[32m+[m
+[32m+[m[32m    static std::unique_ptr<XLDisplay> _display;[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Xlib variables[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    static Display * xl_dpy;[m
+[32m+[m
+[32m+[m[32m    static Window    xl_wdw;[m
+[32m+[m
+[32m+[m[32m    static GC        xl_gc;[m
+[32m+[m
+[32m+[m[32m    static Colormap  xl_cm;[m
+[32m+[m
+[32m+[m[32m    static XFontStruct* xl_font;[m
+[32m+[m
+[32m+[m[32m    static std::vector<int> xl_colors;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m#endif[m
+[1mdiff --git a/practica2.2/rvr-release1.0/prediction/prediction.cc b/practica2.2/rvr-release1.0/prediction/prediction.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..39cd5ef[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/prediction/prediction.cc[m
+[36m@@ -0,0 +1,533 @@[m
+[32m+[m[32m#include <memory>[m
+[32m+[m[32m#include <iostream>[m
+[32m+[m[32m#include <mutex>[m
+[32m+[m[32m#include <condition_variable>[m
+[32m+[m[32m#include <cstdint>[m
+[32m+[m[32m#include <thread>[m
+[32m+[m[32m#include <tuple>[m
+[32m+[m[32m#include <map>[m
+[32m+[m[32m#include <chrono>[m
+[32m+[m[32m#include <string>[m
+[32m+[m
+[32m+[m[32m#include <unistd.h>[m
+[32m+[m
+[32m+[m[32m#include "XLDisplay.h"[m
+[32m+[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m
+[32m+[m[32m// Interpolación en el jugador 2[m
+[32m+[m[32mbool interpolation = false;[m
+[32m+[m
+[32m+[m[32m// Predicción en el jugador 1[m
+[32m+[m[32mbool prediction    = false;[m
+[32m+[m
+[32m+[m[32m// Tick interno de simulación[m
+[32m+[m[32m#define SIM_TICK 35[m
+[32m+[m
+[32m+[m[32m// define la frecuencia de actualizaciones que envía el servidor[m
+[32m+[m[32m#define UPDATE_FREQ 5[m
+[32m+[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m
+[32m+[m[32menum input_t : uint8_t { none = 0, left = 1, right = 2};[m
+[32m+[m
+[32m+[m[32musing state_t = std::tuple<uint32_t, input_t>;[m
+[32m+[m
+[32m+[m[32musing state_buffer_t = std::map<uint32_t, state_t>;[m
+[32m+[m
+[32m+[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m
+[32m+[m[32mclass InputThread[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    void input()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XLDisplay& dpy = XLDisplay::display();[m
+[32m+[m
+[32m+[m[32m        while(true)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            char k = dpy.wait_key();[m
+[32m+[m
+[32m+[m[32m            imutex.lock();[m
+[32m+[m
+[32m+[m[32m            switch (k)[m
+[32m+[m[32m            {[m
+[32m+[m[32m                case 'a':[m
+[32m+[m[32m                    key   = input_t::left;[m
+[32m+[m[32m                    ready = true;[m
+[32m+[m[32m                break;[m
+[32m+[m
+[32m+[m[32m                case 'd':[m
+[32m+[m[32m                    key = input_t::right;[m
+[32m+[m[32m                    ready = true;[m
+[32m+[m[32m                break;[m
+[32m+[m
+[32m+[m[32m                default:[m
+[32m+[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m            imutex.unlock();[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    bool read_input(input_t &i)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        std::unique_lock<std::mutex> lock(imutex);[m
+[32m+[m
+[32m+[m[32m        bool r = ready;[m
+[32m+[m[32m        i      = key;[m
+[32m+[m
+[32m+[m[32m        ready = false;[m
+[32m+[m
+[32m+[m[32m        return r;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m[32m    std::mutex imutex;[m
+[32m+[m[32m    std::condition_variable icv;[m
+[32m+[m
+[32m+[m[32m    input_t key;[m
+[32m+[m[32m    bool    ready = false;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m
+[32m+[m[32mclass Network[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m
+[32m+[m[32m    enum host_t { p1 = 0, p2 = 1, server = 2 };[m
+[32m+[m
+[32m+[m[32m    Network(uint32_t _lat1, uint32_t _lat2, uint32_t tick_time)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        lat1 = _lat1 / tick_time;[m
+[32m+[m[32m        lat2 = _lat2 / tick_time;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void send_message(uint32_t t, host_t from, host_t to, state_t s_pair)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if ( from == host_t::p1 || to == host_t::p1 )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            t = t + lat1;[m
+[32m+[m[32m        }[m
+[32m+[m[32m        else if ( from == host_t::p2 || to == host_t::p2 )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            t = t + lat2;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        switch (to)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            case host_t::p1:[m
+[32m+[m[32m                p1_in.insert(std::pair<uint32_t, state_t>(t, s_pair));[m
+[32m+[m[32m                break;[m
+[32m+[m
+[32m+[m[32m            case host_t::p2:[m
+[32m+[m[32m                p2_in.insert(std::pair<uint32_t, state_t>(t, s_pair));[m
+[32m+[m[32m                break;[m
+[32m+[m
+[32m+[m[32m            case host_t::server:[m
+[32m+[m[32m                server_in.insert(std::pair<uint32_t, state_t>(t, s_pair));[m
+[32m+[m[32m                break;[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    bool recv_message(uint32_t& t, host_t h, state_t& s)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        state_buffer_t * sb;[m
+[32m+[m[32m        uint32_t lat;[m
+[32m+[m
+[32m+[m[32m        switch (h)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            case host_t::p1:[m
+[32m+[m[32m                sb  = &p1_in;[m
+[32m+[m[32m                lat = lat1;[m
+[32m+[m[32m                break;[m
+[32m+[m
+[32m+[m[32m            case host_t::p2:[m
+[32m+[m[32m                sb  = &p2_in;[m
+[32m+[m[32m                lat = lat2;[m
+[32m+[m[32m                break;[m
+[32m+[m
+[32m+[m[32m            case host_t::server:[m
+[32m+[m[32m                sb  = &server_in;[m
+[32m+[m[32m                lat = 0;[m
+[32m+[m[32m                break;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        auto msg_it = sb->find(t);[m
+[32m+[m
+[32m+[m[32m        if ( msg_it == sb->end() )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            return false;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        t -= lat;[m
+[32m+[m
+[32m+[m[32m        s = msg_it->second;[m
+[32m+[m
+[32m+[m[32m        return true;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m[32m    uint32_t lat1;[m
+[32m+[m[32m    uint32_t lat2;[m
+[32m+[m
+[32m+[m[32m    state_buffer_t p1_in;[m
+[32m+[m[32m    state_buffer_t p2_in;[m
+[32m+[m[32m    state_buffer_t server_in;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mclass Player[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    Player(uint32_t tick_ini, uint32_t x_ini, uint32_t _y, XLDisplay::XLColor _c)[m
+[32m+[m[32m        :y(_y), c(_c)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        insert_state(tick_ini, x_ini);[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    void insert_state(uint32_t tick, uint32_t x, input_t i = input_t::none)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        state_t s_pair(x, i);[m
+[32m+[m
+[32m+[m[32m        states.insert(std::pair<uint32_t, state_t>(tick, s_pair));[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    void render(uint32_t tick)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XLDisplay& dpy = XLDisplay::display();[m
+[32m+[m
+[32m+[m[32m        uint32_t x;[m
+[32m+[m
+[32m+[m[32m        auto s_it = states.find(tick);[m
+[32m+[m
+[32m+[m[32m        if ( s_it == states.end() )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            auto last = states.rbegin();[m
+[32m+[m
+[32m+[m[32m            x = std::get<0>(last->second);[m
+[32m+[m[32m        }[m
+[32m+[m[32m        else[m
+[32m+[m[32m        {[m
+[32m+[m[32m            x = std::get<0>(s_it->second);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        dpy.set_color(c);[m
+[32m+[m
+[32m+[m[32m        dpy.rectangle(x, y, 45, 45, true);[m
+[32m+[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void move(uint32_t tick, input_t k)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        auto     s_it = states.find(tick - 1);[m
+[32m+[m[32m        uint32_t x    = std::get<0>(s_it->second);[m
+[32m+[m
+[32m+[m[32m        switch(k)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            case input_t::left:[m
+[32m+[m[32m                x -= 5;[m
+[32m+[m[32m            break;[m
+[32m+[m[32m            case input_t::right:[m
+[32m+[m[32m                x += 5;[m
+[32m+[m[32m            break;[m
+[32m+[m[32m            case input_t::none:[m
+[32m+[m[32m            break;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        insert_state(tick, x, k);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    state_t get_state(uint32_t tick)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        auto s_it = states.find(tick);[m
+[32m+[m
+[32m+[m[32m        return s_it->second;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void interpolate(uint32_t ini, uint32_t fin, state_t msg)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        state_t  ini_state = get_state(ini);[m
+[32m+[m
+[32m+[m[32m        int32_t x_ini = (int32_t) std::get<0>(ini_state);[m
+[32m+[m[32m        int32_t x_fin = (int32_t) std::get<0>(msg);[m
+[32m+[m
+[32m+[m[32m        int32_t steps = fin - ini;[m
+[32m+[m[32m        int32_t delta = x_fin - x_ini;[m
+[32m+[m
+[32m+[m[32m        int32_t inc = delta /steps;[m
+[32m+[m[32m        uint32_t x  = std::get<0>(ini_state) + inc;[m
+[32m+[m
+[32m+[m[32m        for (uint32_t t=ini+1 ; t <= fin; t++, x+=inc)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            insert_state(t, x, input_t::none);[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m
+[32m+[m[32m    uint32_t y;[m
+[32m+[m
+[32m+[m[32m    XLDisplay::XLColor c;[m
+[32m+[m
+[32m+[m[32m    state_buffer_t states;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m
+[32m+[m[32mclass Simulation[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    Simulation(uint32_t p1_lat, uint32_t p2_lat):[m
+[32m+[m[32m        tick(1),[m
+[32m+[m[32m        net(p1_lat, p2_lat, SIM_TICK),[m
+[32m+[m[32m        server(0, 100, 111, XLDisplay::BROWN),[m
+[32m+[m[32m        p1(0, 100, 45, XLDisplay::GREEN),[m
+[32m+[m[32m        p2(0, 100, 177, XLDisplay::RED)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        // Desplaza el tick en el jugador 2 para poder usar el mismo tick[m
+[32m+[m[32m        p2_tick_delta = (p2_lat / SIM_TICK) + UPDATE_FREQ;[m
+[32m+[m
+[32m+[m[32m        ithread.reset(new std::thread([&](){it.input();}));[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void server_step()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        static uint32_t send = 0;[m
+[32m+[m
+[32m+[m[32m        state_t msg;[m
+[32m+[m[32m        input_t p1_input = input_t::none;[m
+[32m+[m
+[32m+[m[32m        if ( net.recv_message(tick, Network::server, msg) )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            p1_input = std::get<1>(msg);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        server.move(tick, p1_input);[m
+[32m+[m
+[32m+[m[32m        if ( send == UPDATE_FREQ )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            send = 0;[m
+[32m+[m
+[32m+[m[32m            state_t current = server.get_state(tick);[m
+[32m+[m
+[32m+[m[32m            net.send_message(tick, Network::server, Network::p1, current);[m
+[32m+[m[32m            net.send_message(tick, Network::server, Network::p2, current);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        send++;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void player_one_step()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        input_t p1_key;[m
+[32m+[m
+[32m+[m[32m        bool kr = it.read_input(p1_key);[m
+[32m+[m
+[32m+[m[32m        if (kr)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            state_t istate(0, p1_key);[m
+[32m+[m
+[32m+[m[32m            net.send_message(tick, Network::p1, Network::server, istate);[m
+[32m+[m[32m        }[m
+[32m+[m[32m        else[m
+[32m+[m[32m        {[m
+[32m+[m[32m            p1_key = input_t::none;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        /* --------------------------- */[m
+[32m+[m[32m        /* Prediction                  */[m
+[32m+[m[32m        /* --------------------------- */[m
+[32m+[m[32m        if (prediction)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            p1.move(tick, p1_key);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        uint32_t msg_tick = tick;[m
+[32m+[m
+[32m+[m[32m        state_t msg;[m
+[32m+[m
+[32m+[m[32m        if ( net.recv_message(msg_tick, Network::p1, msg) )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            if (prediction)[m
+[32m+[m[32m            {[m
+[32m+[m[32m                state_t past_state = p1.get_state(msg_tick);[m
+[32m+[m
+[32m+[m[32m                if ( std::get<0>(past_state) != std::get<1>(msg) )[m
+[32m+[m[32m                {[m
+[32m+[m[32m                    /* --------------------------- */[m
+[32m+[m[32m                    /* Correction                  */[m
+[32m+[m[32m                    /* --------------------------- */[m
+[32m+[m[32m                }[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                p1.insert_state(tick, std::get<0>(msg));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void player_two_step()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        static uint32_t last_prev_tick = 0;[m
+[32m+[m[32m        static uint32_t last_tick      = 0;[m
+[32m+[m
+[32m+[m[32m        uint32_t msg_tick = tick;[m
+[32m+[m
+[32m+[m[32m        state_t msg;[m
+[32m+[m
+[32m+[m[32m        if ( net.recv_message(msg_tick, Network::p2, msg) )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            if (interpolation)[m
+[32m+[m[32m            {[m
+[32m+[m[32m                /* --------------------------- */[m
+[32m+[m[32m                /* Interpolation               */[m
+[32m+[m[32m                /* --------------------------- */[m
+[32m+[m[32m                last_prev_tick = last_tick;[m
+[32m+[m[32m                last_tick      = msg_tick;[m
+[32m+[m
+[32m+[m[32m                p2.interpolate(last_prev_tick, last_tick, msg);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                p2.insert_state(tick, std::get<0>(msg));[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void loop()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        while(true)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            player_one_step();[m
+[32m+[m
+[32m+[m[32m            server_step();[m
+[32m+[m
+[32m+[m[32m            player_two_step();[m
+[32m+[m
+[32m+[m[32m            render();[m
+[32m+[m
+[32m+[m[32m            std::this_thread::sleep_for(std::chrono::milliseconds(SIM_TICK));[m
+[32m+[m
+[32m+[m[32m            tick++;[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    void render()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XLDisplay& dpy = XLDisplay::display();[m
+[32m+[m
+[32m+[m[32m        dpy.clear();[m
+[32m+[m
+[32m+[m[32m        dpy.set_color(XLDisplay::BLACK);[m
+[32m+[m
+[32m+[m[32m        dpy.text(10,95, "Jugador 1");[m
+[32m+[m
+[32m+[m[32m        dpy.line(0,101,500,101);[m
+[32m+[m
+[32m+[m[32m        dpy.text(10, 161, "Servidor");[m
+[32m+[m
+[32m+[m[32m        dpy.line(0,167,500,167);[m
+[32m+[m
+[32m+[m[32m        dpy.text(10, 230, "Jugador 2");[m
+[32m+[m
+[32m+[m[32m        server.render(tick);[m
+[32m+[m
+[32m+[m[32m        p1.render(tick);[m
+[32m+[m
+[32m+[m[32m        if ( interpolation )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            if ( tick < p2_tick_delta )[m
+[32m+[m[32m            {[m
+[32m+[m[32m                p2.render(0);[m
+[32m+[m
+[32m+[m[32m            }[m
+[32m+[m[32m            else[m
+[32m+[m[32m            {[m
+[32m+[m[32m                p2.render(tick - p2_tick_delta);[m
+[32m+[m[32m            }[m
+[32m+[m
+[32m+[m[32m        }[m
+[32m+[m[32m        else[m
+[32m+[m[32m        {[m
+[32m+[m[32m            p2.render(tick);[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        dpy.flush();[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m[32m    uint32_t tick;[m
+[32m+[m[32m    uint32_t p2_tick_delta;[m
+[32m+[m
+[32m+[m[32m    Network net;[m
+[32m+[m
+[32m+[m[32m    InputThread it;[m
+[32m+[m
+[32m+[m[32m    Player server;[m
+[32m+[m[32m    Player p1;[m
+[32m+[m[32m    Player p2;[m
+[32m+[m
+[32m+[m[32m    std::unique_ptr<std::thread> ithread;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m[32m/* -------------------------------------------------------------------------- */[m
+[32m+[m
+[32m+[m[32mint main(int argc, char **argv)[m
+[32m+[m[32m{[m
+[32m+[m[32m    int c;[m
+[32m+[m
+[32m+[m[32m    std::string lat1_s;[m
+[32m+[m[32m    std::string lat2_s;[m
+[32m+[m
+[32m+[m[32m    XLDisplay::init(100, 200, "RVR Modulo 3");[m
+[32m+[m
+[32m+[m[32m    while ((c = getopt(argc, argv, "1:2:pih")) != -1)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        switch (c)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            case 'p':[m
+[32m+[m[32m                prediction = true;[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 'i':[m
+[32m+[m[32m                interpolation = true;[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case '1':[m
+[32m+[m[32m                lat1_s = optarg;[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case '2':[m
+[32m+[m[32m                lat2_s = optarg;[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case '?':[m
+[32m+[m[32m            case 'h':[m
+[32m+[m[32m                std::cerr << "Uso prediccion -1 <latencia jug1> -2 <latencia jug2> -p -i\n";[m
+[32m+[m[32m                return -1;[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    std::cout << "P1 Latencia: " << lat1_s << std::endl;[m
+[32m+[m[32m    std::cout << "P2 Latencia: " << lat2_s << std::endl;[m
+[32m+[m[32m    std::cout << "Interpolación: " << interpolation << std::endl;[m
+[32m+[m[32m    std::cout << "Predicción: " << prediction << std::endl;[m
+[32m+[m
+[32m+[m[32m    Simulation sim(std::stoi(lat1_s), std::stoi(lat2_s));[m
+[32m+[m
+[32m+[m[32m    sim.loop();[m
+[32m+[m
+[32m+[m[32m    return 0;[m
+[32m+[m[32m};[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/xlibw/Makefile b/practica2.2/rvr-release1.0/xlibw/Makefile[m
+[1mnew file mode 100644[m
+[1mindex 0000000..229b4bc[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/xlibw/Makefile[m
+[36m@@ -0,0 +1,19 @@[m
+[32m+[m[32mCC=g++[m
+[32m+[m[32mCFLAGS=-g -I. -std=c++11[m
+[32m+[m[32mDEPS = XLDisplay.h[m
+[32m+[m[32mOBJ = ejemplo.o XLDisplay.o[m
+[32m+[m[32mLIBS=-lpthread -lm -lX11 -std=c++11[m
+[32m+[m
+[32m+[m[32m%.o: %.cc $(DEPS)[m
+[32m+[m	[32m$(CC) -g -c -o $@ $< $(CFLAGS)[m
+[32m+[m
+[32m+[m[32mall: ejemplo[m
+[32m+[m
+[32m+[m[32mejemplo: $(OBJ) ejemplo.o[m
+[32m+[m	[32mg++ -o $@ $^ $(CFLAGS) $(LIBS)[m
+[32m+[m
+[32m+[m[32m.PHONY: clean[m
+[32m+[m
+[32m+[m[32mclean:[m
+[32m+[m	[32mrm -f *.o ejemplo[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/xlibw/XLDisplay.cc b/practica2.2/rvr-release1.0/xlibw/XLDisplay.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..99da48e[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/xlibw/XLDisplay.cc[m
+[36m@@ -0,0 +1,135 @@[m
+[32m+[m[32m#include "XLDisplay.h"[m
+[32m+[m[32m#include <stdexcept>[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//[m
+[32m+[m[32mstd::unique_ptr<XLDisplay> XLDisplay::_display = nullptr;[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mDisplay* XLDisplay::xl_dpy;[m
+[32m+[m[32mWindow   XLDisplay::xl_wdw;[m
+[32m+[m
+[32m+[m[32mGC XLDisplay::xl_gc;[m
+[32m+[m
+[32m+[m[32mColormap XLDisplay::xl_cm;[m
+[32m+[m[32mstd::vector<int> XLDisplay::xl_colors;[m
+[32m+[m
+[32m+[m[32mXFontStruct* XLDisplay::xl_font;[m
+[32m+[m
+[32m+[m[32mconst char * XLDisplay::font =  "*-helvetica-*-r-*-*-12-*";[m
+[32m+[m[32m// const char * XLDisplay::font = "*-liberation sans-*-r-*-*-*-*";[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mvoid XLDisplay::init(int32_t w, int32_t h, const std::string& t)[m
+[32m+[m[32m{[m
+[32m+[m[32m    if (_display != nullptr)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    XInitThreads();[m
+[32m+[m
+[32m+[m[32m    xl_dpy = XOpenDisplay(0);[m
+[32m+[m
+[32m+[m[32m    if(xl_dpy == nullptr)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        throw std::runtime_error("XOpenDisplay: cannot open display.\n");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    int black = BlackPixel(xl_dpy, DefaultScreen(xl_dpy));[m
+[32m+[m[32m    int white = WhitePixel(xl_dpy, DefaultScreen(xl_dpy));[m
+[32m+[m
+[32m+[m[32m    // (0,0) coordenadas del origen, esquina superior izquierda de la ventana[m
+[32m+[m[32m    // 3 borde de la ventana[m
+[32m+[m[32m    // white, negro (black) borde y blanco (white) fondo de la ventana[m
+[32m+[m[32m    xl_wdw = XCreateSimpleWindow(xl_dpy, DefaultRootWindow(xl_dpy),[m
+[32m+[m[32m            0, 0, w, h, 3, black, white);[m
+[32m+[m
+[32m+[m[32m    XSetWindowAttributes attr;[m
+[32m+[m[32m    attr.backing_store = Always;[m
+[32m+[m
+[32m+[m[32m    XChangeWindowAttributes(xl_dpy, xl_wdw, CWBackingStore, &attr);[m
+[32m+[m
+[32m+[m[32m    XStoreName(xl_dpy, xl_wdw, t.c_str());[m
+[32m+[m
+[32m+[m[32m    XSelectInput(xl_dpy, xl_wdw, StructureNotifyMask | KeyPressMask);[m
+[32m+[m
+[32m+[m[32m    // "Mapea" la ventana en la pantalla y crea el "contexto gráfico" asociado[m
+[32m+[m[32m    XMapWindow(xl_dpy, xl_wdw);[m
+[32m+[m
+[32m+[m[32m    xl_gc = XCreateGC(xl_dpy, xl_wdw, 0, 0);[m
+[32m+[m
+[32m+[m[32m    XSetForeground(xl_dpy, xl_gc, black);[m
+[32m+[m
+[32m+[m[32m    //Inicializa el mapa de colores[m
+[32m+[m[32m    xl_cm =  DefaultColormap(xl_dpy, DefaultScreen(xl_dpy));[m
+[32m+[m
+[32m+[m[32m    std::vector<std::string> named = {"red", "brown", "blue", "yellow", "green"};[m
+[32m+[m
+[32m+[m[32m    for (auto nc : named)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XColor tmpc;[m
+[32m+[m
+[32m+[m[32m        int rc = XAllocNamedColor(xl_dpy, xl_cm, nc.c_str(), &tmpc, &tmpc);[m
+[32m+[m
+[32m+[m[32m        if (rc == 0)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            throw std::runtime_error("XAllocNamedColor: cannot allocate" + nc + "\n");[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        xl_colors.push_back(tmpc.pixel);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    xl_colors.push_back(white);[m
+[32m+[m
+[32m+[m[32m    xl_colors.push_back(black);[m
+[32m+[m
+[32m+[m[32m    // Carga la fuente por defecto[m
+[32m+[m[32m    xl_font = XLoadQueryFont(xl_dpy, const_cast<char *>(font));[m
+[32m+[m
+[32m+[m[32m    if ( xl_font == nullptr )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        throw std::runtime_error("XLoadQueryFont: cannot load font.\n");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    XSetFont(xl_dpy, xl_gc, xl_font->fid);[m
+[32m+[m
+[32m+[m[32m    // Espera al evento MapNotify[m
+[32m+[m[32m    while (true)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XEvent e;[m
+[32m+[m
+[32m+[m[32m        XNextEvent(xl_dpy, &e);[m
+[32m+[m
+[32m+[m[32m        if (e.type == MapNotify)[m
+[32m+[m[32m            break;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //Inicializa el puntero singleton[m
+[32m+[m[32m    _display = std::unique_ptr<XLDisplay>(new XLDisplay);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m[32m//------------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32mchar XLDisplay::wait_key()[m
+[32m+[m[32m{[m
+[32m+[m[32m    XEvent event;[m
+[32m+[m
+[32m+[m[32m    while(true)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XNextEvent(xl_dpy, &event);[m
+[32m+[m
+[32m+[m[32m        if ( event.type != KeyPress )[m
+[32m+[m[32m        {[m
+[32m+[m[32m            continue;[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        return XLookupKeysym(&event.xkey,0);[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[32m+[m
+[1mdiff --git a/practica2.2/rvr-release1.0/xlibw/XLDisplay.h b/practica2.2/rvr-release1.0/xlibw/XLDisplay.h[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ccc4d19[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/xlibw/XLDisplay.h[m
+[36m@@ -0,0 +1,151 @@[m
+[32m+[m[32m#include <X11/Xlib.h>[m
+[32m+[m[32m#include <stdlib.h>[m
+[32m+[m[32m#include <string>[m
+[32m+[m[32m#include <stdexcept>[m
+[32m+[m[32m#include <memory>[m
+[32m+[m[32m#include <vector>[m
+[32m+[m
+[32m+[m[32m#ifndef _XL_DISPLAY[m
+[32m+[m[32m#define _XL_DISPLAY[m
+[32m+[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32m// Esta clase ofrece un interfaz sencillo para interacciones sencillas con el[m
+[32m+[m[32m// servidor gráfico del sistema X.[m
+[32m+[m[32m//[m
+[32m+[m[32m// Referencia: https://tronche.com/gui/x/xlib/[m
+[32m+[m[32m// -----------------------------------------------------------------------------[m
+[32m+[m[32mclass XLDisplay[m
+[32m+[m[32m{[m
+[32m+[m[32mpublic:[m
+[32m+[m[32m    enum XLColor[m
+[32m+[m[32m    {[m
+[32m+[m[32m        RED    = 0,[m
+[32m+[m[32m        BROWN  = 1,[m
+[32m+[m[32m        BLUE   = 2,[m
+[32m+[m[32m        YELLOW = 3,[m
+[32m+[m[32m        GREEN  = 4,[m
+[32m+[m[32m        WHITE  = 5,[m
+[32m+[m[32m        BLACK  = 6[m
+[32m+[m[32m    };[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Constructores. Implementa el patrón singleton[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // El programa principal debe llamar a la función init, ej.[m
+[32m+[m[32m    //[m
+[32m+[m[32m    //  XLDisplay::init(200, 300, "Título Ventana);[m
+[32m+[m[32m    //  ...[m
+[32m+[m[32m    //  XLDisplay& dpy = XLDisplay::display();[m
+[32m+[m[32m    //  ...[m
+[32m+[m[32m    //  dpy.circle(14, 14, 5);[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    XLDisplay(const XLDisplay&) = delete;[m
+[32m+[m
+[32m+[m[32m    XLDisplay(const XLDisplay&&) = delete;[m
+[32m+[m
+[32m+[m[32m    XLDisplay& operator=(const XLDisplay&) = delete;[m
+[32m+[m
+[32m+[m[32m    static void init(int32_t w, int32_t h, const std::string& t);[m
+[32m+[m
+[32m+[m[32m    ~XLDisplay()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XFreeColormap(xl_dpy, xl_cm);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    static XLDisplay& display()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return *_display.get();[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Funciones de render[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    void set_color(XLColor c)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XSetForeground(xl_dpy, xl_gc, xl_colors[c]);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja un punto en (x,y)[m
+[32m+[m[32m    void point( int32_t x, int32_t y )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawPoint(xl_dpy, xl_wdw, xl_gc, x, y);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja una línea desde (x1,y1) a (x2,y2)[m
+[32m+[m[32m    void line( int32_t x1, int32_t y1, int32_t x2, int32_t y2 )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawLine(xl_dpy, xl_wdw, xl_gc,x1,y1,x2,y2);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja una serie de líneas cuyos vértices están dados en un array de[m
+[32m+[m[32m    // estructuras XPoint.[m
+[32m+[m[32m    //[m
+[32m+[m[32m    // XPoint pts [] = {{0,0},{15,15},{0,15},{0,0}}[m
+[32m+[m[32m    // int npoints = 4;[m
+[32m+[m[32m    void lines(XPoint * points, int npoints)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawLines(xl_dpy, xl_wdw, xl_gc, points, npoints, CoordModeOrigin);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja un círculo con centro en (x,y) y radio r[m
+[32m+[m[32m    void circle(int32_t x, int32_t y, int32_t r)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawArc(xl_dpy, xl_wdw, xl_gc, x-r, y - r, 2 * r, 2 * r, 0, 360*64);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Dibuja un rectángulo con vértice superior-izquierdo en (x,y), ancho w[m
+[32m+[m[32m    // y alto h[m
+[32m+[m[32m    void rectangle(int32_t x, int32_t y, int32_t w, int32_t h)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawRectangle(xl_dpy, xl_wdw, xl_gc, x, y, w, h);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Escribe un texto en la posición (x,y)[m
+[32m+[m[32m    void text(int32_t x, int32_t y, const std::string& txt)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XDrawString(xl_dpy, xl_wdw, xl_gc, x, y, txt.c_str(), txt.length());[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Vacía el buffer enviando los comandos al servidor y dibuja la ventana[m
+[32m+[m[32m    void flush()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XFlush(xl_dpy);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // Borra la ventana[m
+[32m+[m[32m    void clear()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        XClearWindow(xl_dpy, xl_wdw);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Eventos de entrada (teclado)[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m
+[32m+[m[32m    //Espera por la pulsación de una tecla, que devuelve la función[m
+[32m+[m[32m    char wait_key();[m
+[32m+[m
+[32m+[m[32mprivate:[m
+[32m+[m[32m    XLDisplay() = default;[m
+[32m+[m
+[32m+[m[32m    static const char * font;[m
+[32m+[m
+[32m+[m[32m    static std::unique_ptr<XLDisplay> _display;[m
+[32m+[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    // Xlib variables[m
+[32m+[m[32m    // -------------------------------------------------------------------------[m
+[32m+[m[32m    static Display * xl_dpy;[m
+[32m+[m
+[32m+[m[32m    static Window    xl_wdw;[m
+[32m+[m
+[32m+[m[32m    static GC        xl_gc;[m
+[32m+[m
+[32m+[m[32m    static Colormap  xl_cm;[m
+[32m+[m
+[32m+[m[32m    static XFontStruct* xl_font;[m
+[32m+[m
+[32m+[m[32m    static std::vector<int> xl_colors;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32m#endif[m
+[1mdiff --git a/practica2.2/rvr-release1.0/xlibw/ejemplo.cc b/practica2.2/rvr-release1.0/xlibw/ejemplo.cc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0d54c60[m
+[1m--- /dev/null[m
+[1m+++ b/practica2.2/rvr-release1.0/xlibw/ejemplo.cc[m
+[36m@@ -0,0 +1,63 @@[m
+[32m+[m[32m#include "XLDisplay.h"[m
+[32m+[m[32m#include <unistd.h>[m
+[32m+[m
+[32m+[m[32mvoid draw_forms()[m
+[32m+[m[32m{[m
+[32m+[m[32m    XLDisplay& dpy = XLDisplay::display();[m
+[32m+[m
+[32m+[m[32m    dpy.set_color(XLDisplay::RED);[m
+[32m+[m
+[32m+[m[32m    dpy.point(50,50);[m
+[32m+[m
+[32m+[m[32m    dpy.line(20,20,100,50);[m
+[32m+[m
+[32m+[m[32m    dpy.set_color(XLDisplay::BROWN);[m
+[32m+[m
+[32m+[m[32m    dpy.circle(45,45,15);[m
+[32m+[m
+[32m+[m[32m    dpy.set_color(XLDisplay::BLUE);[m
+[32m+[m
+[32m+[m[32m    dpy.rectangle(60,60,30,15);[m
+[32m+[m
+[32m+[m[32m    XPoint pts[] = {{100,100},{130,130},{100,130},{100,100}};[m
+[32m+[m
+[32m+[m[32m    dpy.set_color(XLDisplay::YELLOW);[m
+[32m+[m
+[32m+[m[32m    dpy.lines(pts, 4);[m
+[32m+[m
+[32m+[m[32m    dpy.set_color(XLDisplay::GREEN);[m
+[32m+[m
+[32m+[m[32m    dpy.text(90, 80, "HOLA MUNDO!");[m
+[32m+[m
+[32m+[m[32m    dpy.flush();[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mvoid wait()[m
+[32m+[m[32m{[m
+[32m+[m[32m    XLDisplay& dpy = XLDisplay::display();[m
+[32m+[m
+[32m+[m[32m    char k;[m
+[32m+[m
+[32m+[m[32m    do[m
+[32m+[m[32m    {[m
+[32m+[m[32m         k = dpy.wait_key();[m
+[32m+[m[32m    } while (k != 'q');[m
+[32m+[m
+[32m+[m[32m    dpy.clear();[m
+[32m+[m
+[32m+[m[32m    dpy.flush();[m
+[32m+[m
+[32m+[m[32m    sleep(1);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m
+[32m+[m[32mint main()[m
+[32m+[m[32m{[m
+[32m+[m[32m    XLDisplay::init(100, 200, "Ejemplo");[m
+[32m+[m
+[32m+[m[32m    draw_forms();[m
+[32m+[m
+[32m+[m[32m    wait();[m
+[32m+[m
+[32m+[m[32m    return 0;[m
+[32m+[m[32m}[m
